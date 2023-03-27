@@ -14,6 +14,7 @@ import { rootController } from './controllers/root';
 import { userController } from './controllers/users';
 import { createChatSocket } from './controllers/chat';
 import { authController } from './controllers/auth';
+import { initS3 } from './services/s3';
 
 
 
@@ -109,6 +110,7 @@ export class TessarakWebserver {
         const results = await Promise.all([
             initAuth0(),
             initOpenAI(),
+            initS3(),
         ]);
         // todo handle results looking for errors
     }
