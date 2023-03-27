@@ -2,7 +2,7 @@
   "name": "tessarak-webserver",
   "version": "1.0.0",
   "main": "server.js",
-  "author": "Robert Christian Schupp",
+  "author": "Robert Christian Schupp (a2345sooted)",
   "license": "MIT",
   "scripts": {
     "dev": "tsc-watch --noClear --outDir ./dist --onSuccess \"npm run server\"",

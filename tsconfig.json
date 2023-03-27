@@ -109,6 +109,5 @@
     "node_modules",
     "dist",
     "test",
-    "old_stuff",
   ]
 }
