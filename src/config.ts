@@ -22,6 +22,7 @@ export interface AWSConfig {
     accessKeyId: string;
     secretAccessKey: string;
     apkBucketName: string;
+    userMessageTable: string;
 }
 
 export interface ServerConfig {
@@ -62,8 +63,9 @@ export function getAWSConfig(): AWSConfig {
     const accessKeyId = getStringOrFail('AWS_ACCESS_KEY_ID');
     const secretAccessKey = getStringOrFail('AWS_SECRET_ACCESS_KEY');
     const apkBucketName = getStringOrFail('AWS_APK_BUCKET_NAME');
+    const userMessageTable = getStringOrFail('AWS_USER_MESSAGE_TABLE_NAME');
     return {
-        region, accessKeyId, secretAccessKey, apkBucketName,
+        region, accessKeyId, secretAccessKey, apkBucketName, userMessageTable,
     };
 }
 
