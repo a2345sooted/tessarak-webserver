@@ -24,10 +24,21 @@ function getEffectiveRecentMessages(contextNumTokens: number, allMessages: GptMe
     return allMessages;
 }
 
+const primerLines = [
+    "The Tessarak is a decentralized network of computers and apps that is impossible to be censored or shutdown by any government or corporation. It can only be moderated by the community as a whole.",
+    "Tessarak is an app that is a client to the Tessarak for users. It draws a lot of inspiration from TikTok, but also incorporates many feature requests voiced by the community.",
+    "Everything about the Tessarak is opensource and open for review and public scrutiny.",
+    "The Tessarak Project is a non-profit organization dedicated to driving the development and adoption of the Tessarak, as well as maintaining the mission statement: Infinite dimensions, 1 requirement, ZERO compromises.",
+    "The one requirement is: The Tessarak must be impossible to be shutdown by any government or corporation(s). If the tech to do this does not currently exist, then we will create the tech to do this.",
+    "Currently, Tessarak api is being hosted on AWS by The Tessarak Project.",
+    "You can learn more and download the Tessarak app for android and ios at https://tessarak.org.",
+    "You can join the Discord where you can chat with everyone else about the project and directly influence the development of the app at: https://discord.gg/jb35c6gM",
+];
+
 export async function submitChatPrompt(ctx: SocketContext): Promise<string> {
 
     const systemContextMessages = [
-        {"role": "system", "content": "Your name is Tessa, you also go by Tessy and Tess. You are an advanced AI meant to help make using AI easy."},
+        {"role": "system", "content": primerLines.join(' ')},
     ];
     const contextEstimatedTokens = systemContextMessages.join(' ').split(' ').length;
 

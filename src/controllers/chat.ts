@@ -104,6 +104,7 @@ export function getSocketMessageHandler(ctx: SocketContext): SocketDataHandler {
     }
 }
 
+const DEFAULT_GREETING = "Hi. I'm Tessa. I also go by Tessy and Tess :)  I'm an ai chatbot primed to help you understand what The Tessarak is all about. You can ask me whatever you want!... especially about Tessarak. I want to help you understand :)\n\nGo ahead, ask me a question...";
 
 export function createChatSocket(log: Logger): WebsocketRequestHandler {
     const clients: ChatSocketClientMap = {};
@@ -129,6 +130,12 @@ export function createChatSocket(log: Logger): WebsocketRequestHandler {
         socket.on('pong', getSocketPongHandler(ctx));
         socket.on('close', getSocketCloseHandler(ctx, clients, pingInterval));
         socket.on('message', getSocketMessageHandler(ctx));
+
+        await delayMillis(600);
+        ctx.socket.send(JSON.stringify({type: 'tessa_typing'}), function(error?: Error) {});
+        await delayMillis(2000);
+        ctx.socket.send(JSON.stringify({type: 'tessa_message', id: randomUUID(), text: DEFAULT_GREETING}), function(error?: Error) {});
+        ctx.recentMessages.push({role: 'assistant', content: DEFAULT_GREETING});
 
         next();
     }
