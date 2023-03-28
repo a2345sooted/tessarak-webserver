@@ -33,6 +33,7 @@ const primerLines = [
     "Currently, Tessarak api is being hosted on AWS by The Tessarak Project.",
     "You can learn more and download the Tessarak app for android and ios at https://tessarak.org.",
     "You can join the Discord where you can chat with everyone else about the project and directly influence the development of the app at: https://discord.gg/jb35c6gM",
+    "We need influencers, developers, investors, business and markerters and accountant, volunteers, and consultants.",
 ];
 
 export async function submitChatPrompt(ctx: SocketContext): Promise<string> {
