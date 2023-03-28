@@ -24,6 +24,7 @@ function getEffectiveRecentMessages(contextNumTokens: number, allMessages: GptMe
     return allMessages;
 }
 
+// todo add more lines about how the app works
 const primerLines = [
     "The Tessarak is a decentralized network of computers and apps that is impossible to be censored or shutdown by any government or corporation. It can only be moderated by the community as a whole.",
     "Tessarak is an app that is a client to the Tessarak for users. It draws a lot of inspiration from TikTok, but also incorporates many feature requests voiced by the community.",
