@@ -22,7 +22,7 @@ export interface AWSConfig {
     accessKeyId: string;
     secretAccessKey: string;
     apkBucketName: string;
-    userMessageTable: string;
+    userTessaMessageTable: string;
     androidApkKey: string;
 }
 
@@ -64,14 +64,14 @@ export function getAWSConfig(): AWSConfig {
     const accessKeyId = getStringOrFail('AWS_ACCESS_KEY_ID');
     const secretAccessKey = getStringOrFail('AWS_SECRET_ACCESS_KEY');
     const apkBucketName = getStringOrFail('AWS_APK_BUCKET_NAME');
-    const userMessageTable = getStringOrFail('AWS_USER_MESSAGE_TABLE_NAME');
+    const userTessaMessageTable = getStringOrFail('AWS_USER_TESSA_MESSAGE_TABLE_NAME');
     const androidApkKey = getStringOrFail('AWS_ANDROID_APK_KEY');
     return {
         region,
         accessKeyId,
         secretAccessKey,
         apkBucketName,
-        userMessageTable,
+        userTessaMessageTable,
         androidApkKey,
     };
 }
