@@ -5,7 +5,7 @@ import * as auth0 from '../services/auth0';
 
 type TessarakUser = {
     sub: string;
-    phoneNumber: string;
+    phone: string;
 };
 
 
@@ -20,7 +20,7 @@ export async function getUser(req: Request, res: Response): Promise<TessarakUser
     const auth0User = await auth0.getUser(req.ctx.sub);
     return {
         sub: req.ctx.sub,
-        phoneNumber: auth0User.phone_number!,
+        phone: auth0User.phone_number!,
     };
 }
 export async function deleteUser(req: Request, res: Response): Promise<void> {
