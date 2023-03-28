@@ -11,6 +11,6 @@ export async function initS3(): Promise<boolean> {
 }
 
 export async function getAndroidApkDownloadUrl(log: Logger): Promise<string> {
-    const command = new s3.GetObjectCommand({Bucket: awsConfig.apkBucketName, Key: 'tessarak_social_release_1.1.apk'});
+    const command = new s3.GetObjectCommand({Bucket: awsConfig.apkBucketName, Key: awsConfig.androidApkKey});
     return getSignedUrl(s3Client as any, command as any, { expiresIn: 60 });
 }
