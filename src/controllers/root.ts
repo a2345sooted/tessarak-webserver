@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { handle } from '../utils/express';
+import { getAndroidApkDownloadUrl } from '../services/s3';
 
 
 export function rootController(): express.Router {
@@ -11,7 +12,7 @@ export function rootController(): express.Router {
 }
 
 export async function getApk(req: Request, res: Response): Promise<string> {
-    return 'Hello from Tessarak :)';
+    return getAndroidApkDownloadUrl(req.ctx.log);
 }
 
 export async function getRoot(req: Request, res: Response): Promise<string> {

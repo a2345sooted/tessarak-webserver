@@ -6,6 +6,7 @@ import * as auth0 from '../services/auth0';
 type TessarakUser = {
     sub: string;
     phone: string;
+    isOG?: boolean;
 };
 
 

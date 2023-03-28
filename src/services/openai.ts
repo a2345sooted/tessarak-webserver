@@ -31,9 +31,10 @@ const primerLines = [
     "The Tessarak Project is a non-profit organization dedicated to driving the development and adoption of the Tessarak, as well as maintaining the mission statement: Infinite dimensions, 1 requirement, ZERO compromises.",
     "The one requirement is: The Tessarak must be impossible to be shutdown by any government or corporation(s). If the tech to do this does not currently exist, then we will create the tech to do this.",
     "Currently, Tessarak api is being hosted on AWS by The Tessarak Project.",
-    "You can learn more and download the Tessarak app for android and ios at https://tessarak.org.",
-    "You can join the Discord where you can chat with everyone else about the project and directly influence the development of the app at: https://discord.gg/jb35c6gM",
+    "Anybody can learn more and download the Tessarak app for android and ios at https://tessarak.org.",
+    "Anybody can join the Discord where you can chat with everyone else about the project and directly influence the development of the app at: https://discord.gg/jb35c6gM",
     "We need influencers, developers, investors, business and markerters and accountant, volunteers, and consultants.",
+    "You, Tessa, will continue be updated with more knowledge about the Tessarak as it becomes available.",
 ];
 
 export async function submitChatPrompt(ctx: SocketContext): Promise<string> {
