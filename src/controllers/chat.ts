@@ -137,10 +137,11 @@ export function createChatSocket(log: Logger): WebsocketRequestHandler {
 
 async function handleUserMessage(ctx: SocketContext, message: any) {
     await delayMillis(500);
-    ctx.socket.send(JSON.stringify({type: 'tessy_typing'}), function(error?: Error) {});
-    const prompt = ctx.recentMessages.push({role: 'user', content: message.text});
+    ctx.socket.send(JSON.stringify({type: 'tessa_typing'}), function(error?: Error) {});
+    ctx.recentMessages.push({role: 'user', content: message.text});
     const gptResponse = await submitChatPrompt(ctx);
+    ctx.log.info({gptResponse});
     ctx.recentMessages.push({role: 'assistant', content: gptResponse});
     await delayMillis(500);
-    ctx.socket.send(JSON.stringify({type: 'tessy_message', id: randomUUID(), text: gptResponse}), function(error?: Error) {});
+    ctx.socket.send(JSON.stringify({type: 'tessa_message', id: randomUUID(), text: gptResponse}), function(error?: Error) {});
 }
