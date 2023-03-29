@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { handle } from '../utils/express';
-// import { getAndroidApkDownloadUrl } from '../services/s3';
+import { getAndroidApkDownloadUrl } from '../services/s3';
 import * as libsignal from '@privacyresearch/libsignal-protocol-typescript'
 
 export function rootController(): express.Router {
@@ -13,14 +13,10 @@ export function rootController(): express.Router {
 }
 
 export async function getApk(req: Request, res: Response): Promise<string> {
-    // return getAndroidApkDownloadUrl(req.ctx.log);
-    return 'todo';
+    return getAndroidApkDownloadUrl(req.ctx.log);
 }
 
 export async function getRoot(req: Request, res: Response): Promise<any> {
-    // req.ctx.log.info('get root');
-    // return 'Hello from Tessarak :)';
-    // res.status(200).send('hi');
     return {message: 'hi'};
 }
 
