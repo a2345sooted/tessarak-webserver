@@ -91,7 +91,7 @@ export function getCorsConfig() {
 export function getServerConfig(): ServerConfig {
     const envName = getStringOrFail('ENV_NAME');
     const logLevel = getStringOrFail('LOG_LEVEL');
-    const port = getNumberOrFail('SERVER_PORT');
+    const port = getNumberOrFail('PORT');
     return {
         envName, logLevel, port,
     };
