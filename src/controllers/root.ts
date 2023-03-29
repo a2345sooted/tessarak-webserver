@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { handle } from '../utils/express';
 import { getAndroidApkDownloadUrl } from '../services/s3';
+import * as libsignal from '@privacyresearch/libsignal-protocol-typescript'
 
 export function rootController(): express.Router {
     const router = express.Router();
