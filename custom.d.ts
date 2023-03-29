@@ -6,3 +6,5 @@ declare module 'express-serve-static-core' {
         ctx: RequestContext;
     }
 }
+
+declare module 'libsignal';
