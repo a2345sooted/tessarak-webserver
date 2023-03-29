@@ -23,6 +23,8 @@ export async function getRoot(req: Request, res: Response): Promise<string> {
 export type PostMessageBody = {
     text: string;
 }
+
+// working off the readme for this library: https://github.com/privacyresearchgroup/libsignal-protocol-typescript
 export async function testSignal(req: Request, res: Response): Promise<string> {
     const text = (req.body as PostMessageBody).text;
     return `here's what i received: ${text}`;
