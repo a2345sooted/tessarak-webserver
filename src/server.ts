@@ -6,15 +6,15 @@ import { createUUID, UUID } from './utils/uuid';
 import compression from 'compression';
 import bodyParser from 'body-parser';
 import { setRequestContext, updateContextWithSub } from './middleware/request-context';
-import { authUser, initAuth0 } from './services/auth0';
-import { initOpenAI } from './services/openai';
+// import { authUser, initAuth0 } from './services/auth0';
+// import { initOpenAI } from './services/openai';
 import { errorHandler } from './middleware/error-handler';
 import { getCorsConfig, ServerConfig } from './config';
 import { rootController } from './controllers/root';
-import { userController } from './controllers/users';
-import { createChatSocket } from './controllers/chat';
-import { authController } from './controllers/auth';
-import { initS3 } from './services/s3';
+// import { userController } from './controllers/users';
+// import { createChatSocket } from './controllers/chat';
+// import { authController } from './controllers/auth';
+// import { initS3 } from './services/s3';
 
 
 
@@ -42,8 +42,8 @@ export function createExpressApp(server: TessarakWebserver): Express {
     app.use(bodyParser.json());
     app.use(setRequestContext(server));
     app.use('/', rootController());
-    app.use('/v1/auth', authController());
-    app.use('/v1', authUser(), updateContextWithSub(), userController());
+    // app.use('/v1/auth', authController());
+    // app.use('/v1', authUser(), updateContextWithSub(), userController());
     app.use(errorHandler());
     return app;
 }
@@ -60,7 +60,7 @@ function initChatSocket(server: TessarakWebserver): expressWs.Instance {
     }
 
     const appWs = expressWs(app, httpServer);
-    appWs.app.ws('/chatv1', createChatSocket(server.log));
+    // appWs.app.ws('/chatv1', createChatSocket(server.log));
     return appWs;
 }
 
@@ -107,11 +107,11 @@ export class TessarakWebserver {
     }
 
     async init() {
-        const results = await Promise.all([
-            initAuth0(),
-            initOpenAI(),
-            initS3(),
-        ]);
+        // const results = await Promise.all([
+        //     initAuth0(),
+        //     initOpenAI(),
+        //     initS3(),
+        // ]);
         // todo handle results looking for errors
     }
 
