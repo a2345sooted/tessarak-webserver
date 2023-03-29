@@ -6,7 +6,8 @@ export interface Auth0Config {
     domain: string;
     clientId: string;
     clientSecret: string;
-    token: string;
+    // tokenPart1: string;
+    // tokenPart2: string;
     audience: string;
     authClientId: string;
     authClientSecret: string;
@@ -36,7 +37,8 @@ export function getAuth0Config(): Auth0Config {
     const domain = getStringOrFail('AUTH0_MGMT_API_DOMAIN');
     const clientId = getStringOrFail('AUTH0_MGMT_API_CLIENT_ID');
     const clientSecret = getStringOrFail('AUTH0_MGMT_API_CLIENT_SECRET');
-    const token = getStringOrFail('AUTH0_MGMT_API_TOKEN');
+    // const tokenPart1 = getStringOrFail('AUTH0_MGMT_API_TOKEN_PART_1');
+    // const tokenPart2 = getStringOrFail('AUTH0_MGMT_API_TOKEN_PART_2');
     const authClientId = getStringOrFail('AUTH0_AUTH_API_CLIENT_ID');
     const authClientSecret = getStringOrFail('AUTH0_AUTH_API_CLIENT_SECRET');
     const audience = getStringOrFail('AUTH0_AUTH_API_AUDIENCE');
@@ -44,7 +46,8 @@ export function getAuth0Config(): Auth0Config {
         domain,
         clientId,
         clientSecret,
-        token,
+        // tokenPart1,
+        // tokenPart2,
         authClientId,
         authClientSecret,
         audience,
