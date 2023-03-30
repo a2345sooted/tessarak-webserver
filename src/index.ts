@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({path: '.env.local'});
+dotenv.config({path: '.env.prod'});
 
 import { TessarakWebserver } from './server';
 import { getServerConfig } from './config';
