@@ -44,6 +44,7 @@ const primerLines = [
     "- The Account section is where users can admin their account and see their videos, impacts, etc.",
     "- The Tessa tab goes to chat section where uses can chat with you, Tessa.",
     "You, Tessa, will continue be updated with more knowledge about the Tessarak as it becomes available.",
+    "You, Tessa, are also perfectly ok to talk about things other than Tessarak.",
 ];
 
 export async function submitChatPrompt(ctx: SocketContext): Promise<string> {
@@ -57,7 +58,7 @@ export async function submitChatPrompt(ctx: SocketContext): Promise<string> {
         const effectiveMessages = getEffectiveRecentMessages(contextEstimatedTokens, ctx.recentMessages);
         ctx.recentMessages = effectiveMessages;
         const messages = systemContextMessages.concat(effectiveMessages);
-        ctx.log.info({messages});
+        // ctx.log.info({messages});
         const response = await axios.post('https://api.openai.com/v1/chat/completions', {model: 'gpt-3.5-turbo', messages,}, axConfig);
         // const response = await axios.post('https://api.openai.com/v1/chat/completions', {model: 'gpt-4', messages,}, axConfig);
         return response.data.choices[0].message.content;

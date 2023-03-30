@@ -37,7 +37,7 @@ export async function authenticateClient(log: Logger, socket: ChatSocketConnecti
 
     const userInfo = await getUserInfoFromToken(token);
 
-    log.info({userInfo});
+    // log.info({userInfo});
 
     if (!userInfo) {
         throw new Error('unable to get user info for token');
@@ -67,7 +67,7 @@ export function startPingPong(ctx: SocketContext): NodeJS.Timer {
     const pingDelay = 60000;
 
     const pingInterval = setInterval(() => {
-        ctx.log.info('sending socket ping');
+        // ctx.log.info('sending socket ping');
         ctx.socket.ping();
     }, pingDelay);
 
@@ -76,7 +76,7 @@ export function startPingPong(ctx: SocketContext): NodeJS.Timer {
 
 export function getSocketPongHandler(ctx: SocketContext): SocketPongHandler {
     return function() {
-        ctx.log.info('socket ponged');
+        // ctx.log.info('socket ponged');
         ctx.socket.alive = true;
     }
 }
@@ -110,7 +110,6 @@ export function createChatSocket(log: Logger): WebsocketRequestHandler {
     const clients: ChatSocketClientMap = {};
 
     return async function(socket: ChatSocketConnection, req: Request, next: NextFunction) {
-
         let ctx: SocketContext;
 
         try {
@@ -147,7 +146,7 @@ async function handleUserMessage(ctx: SocketContext, message: any) {
     ctx.socket.send(JSON.stringify({type: 'tessa_typing'}), function(error?: Error) {});
     ctx.recentMessages.push({role: 'user', content: message.text});
     const gptResponse = await submitChatPrompt(ctx);
-    ctx.log.info({gptResponse});
+    // ctx.log.info({gptResponse});
     ctx.recentMessages.push({role: 'assistant', content: gptResponse});
     await delayMillis(500);
     ctx.socket.send(JSON.stringify({type: 'tessa_message', id: randomUUID(), text: gptResponse}), function(error?: Error) {});
