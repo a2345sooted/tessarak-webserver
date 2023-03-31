@@ -15,6 +15,7 @@ import { userController } from './controllers/users';
 import { createChatSocket } from './controllers/chat';
 import { authController } from './controllers/auth';
 import { initS3 } from './services/s3';
+import { e2eeMessageController } from './controllers/e2eeMessageController';
 
 
 
@@ -42,9 +43,11 @@ export function createExpressApp(server: TessarakWebserver): Express {
     app.use(bodyParser.json());
     app.use(setRequestContext(server));
     app.use('/', rootController());
+    app.use('/e2e', e2eeMessageController());
     app.use('/v1/auth', authController());
+    // app.use('/v1/e2ee', authUser(), updateContextWithSub(), e2eeMessageController());
     app.use('/v1', authUser(), updateContextWithSub(), userController());
-    app.use(errorHandler());
+    // app.use(errorHandler());
     return app;
 }
 
