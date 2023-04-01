@@ -43,11 +43,12 @@ export function createExpressApp(server: TessarakWebserver): Express {
     app.use(bodyParser.json());
     app.use(setRequestContext(server));
     app.use('/', rootController());
-    app.use('/e2e', e2eeMessageController());
+    app.use(errorHandler());
+    // app.use('/e2e', e2eeMessageController());
     app.use('/v1/auth', authController());
     // app.use('/v1/e2ee', authUser(), updateContextWithSub(), e2eeMessageController());
-    app.use('/v1', authUser(), updateContextWithSub(), userController());
-    // app.use(errorHandler());
+    app.use('/v1/user', authUser(), updateContextWithSub(), userController());
+    app.use(errorHandler());
     return app;
 }
 

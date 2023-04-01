@@ -61,6 +61,7 @@ export async function sendSMSCode(log: Logger, phoneNumber: string) {
 }
 
 export async function verifySMSCode(log: Logger, phoneNumber: string, code: string): Promise<AuthSuccessResponse> {
+    // log.info({phoneNumber, code, auth0Config});
     try {
         const response = await axios.post(`https://${auth0Config.domain}/oauth/token`, {
             client_id: auth0Config.authClientId,
