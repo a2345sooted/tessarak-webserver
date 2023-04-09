@@ -15,6 +15,8 @@ import { userController } from './controllers/users';
 import { createChatSocket } from './controllers/chat';
 import { authController } from './controllers/auth';
 import { initS3 } from './services/s3';
+import { usersController } from "./controllers/v1/users/users";
+import { postsController } from "./controllers/v1/posts/posts";
 
 
 
@@ -44,6 +46,8 @@ export function createExpressApp(server: TessarakWebserver): Express {
     app.use('/', rootController());
     app.use('/v1/auth', authController());
     app.use('/v1', authUser(), updateContextWithSub(), userController());
+    app.use('/v1/users', authUser(), updateContextWithSub(), usersController());
+    app.use('/v1', authUser(), updateContextWithSub(), postsController());
     app.use(errorHandler());
     return app;
 }
