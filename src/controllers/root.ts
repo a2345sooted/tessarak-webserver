@@ -5,14 +5,15 @@ import axios from 'axios';
 import { APTag, getProfileComponents, TkContent, TkContentResponse, TkTag } from '../services/content';
 import { ShipType } from '../entities/ship-type';
 import { getDB } from '../db';
-import { Ship } from '../entities/ship.entity';
+import { _ships, Ship } from '../entities/ship.entity';
 
 export function rootController(): express.Router {
     const router = express.Router();
     router.get('/v1/apk', handle(getApk));
     // router.post('/message', handle(testSignal));
     router.get('/content', handle(getContent));
-    router.get('/crawl', handle(getCrawl));
+    // router.get('/crawl', handle(getCrawl));
+    router.get('/crawl2', handle(getCrawl2));
     router.get('/', handle(getRoot));
 
     return router;
@@ -80,32 +81,37 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
 export async function getCrawl(req: Request, res: Response): Promise<any> {
     req.ctx.log.info('get crawl');
 
-    const response = await axios.get('https://instances.social/list.json?q%5Blanguages%5D%5B%5D=en&q%5Bmin_users%5D=&q%5Bmax_users%5D=&q%5Bsearch%5D=&strict=false');
-    const instances = response.data.instances;
+    async function crawl() {
+        const response = await axios.get('https://instances.social/list.json?q%5Blanguages%5D%5B%5D=en&q%5Bmin_users%5D=&q%5Bmax_users%5D=&q%5Bsearch%5D=&strict=false');
+        const instances = response.data.instances;
+        const inserts = instances.map((instance: any, index: number) => {
+            const ship = new Ship();
+            ship.id = instance._id;
+            ship.domain = instance.name;
+            ship.type = instance.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
+            return _ships().save(ship);
+        });
+        const results = await Promise.all(inserts);
+    }
 
-    const a = instances[0];
-    const ship = new Ship();
-    req.ctx.log.info({a});
-    ship.id = a._id;
-    ship.domain = a.name;
-    ship.type = a.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
-    await getDB().getRepository(Ship).save(ship);
-    // async function crawl() {
-    //     const response = await axios.get('https://instances.social/list.json?q%5Blanguages%5D%5B%5D=en&q%5Bmin_users%5D=&q%5Bmax_users%5D=&q%5Bsearch%5D=&strict=false');
-    //     const instances = response.data.instances;
-    //     const inserts = instances.map((instance: any, index: number) => {
-    //         const ship = new Ship();
-    //         req.ctx.log.info({instance});
-    //         ship.id = instance._id;
-    //         ship.domain = instance.name;
-    //         ship.type = instance.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
-    //         return _ships().save(ship);
-    //     });
-    //     const results = await Promise.all(inserts);
-    // }
-    //
-    // crawl();
-    return a._id;
+    crawl();
+    return 'crawling';
+}
+
+
+export async function getCrawl2(req: Request, res: Response): Promise<any> {
+    req.ctx.log.info('get crawl2');
+
+    async function crawl2() {
+        const mstShips = await _ships().createQueryBuilder('ship')
+            .where('ship.type = :type', {type: ShipType.MASTODON})
+            .limit(1)
+            .getMany();
+        req.ctx.log.info(`num ships = ${mstShips.length}`);
+    }
+
+    crawl2();
+    return 'crawling 2';
 }
 
 
