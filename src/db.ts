@@ -23,6 +23,7 @@ export async function connectToDatabase(log: Logger): Promise<DataSource> {
         database: dbName,
         synchronize: true,
         entities: ['dist/**/**/*.entity{.ts,.js}'],
+        logging: true,
     });
     await dataSource.initialize();
     DATASOURCE = dataSource;

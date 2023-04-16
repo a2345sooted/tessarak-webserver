@@ -17,6 +17,7 @@ export function rootController(): express.Router {
     router.get('/content', handle(getContent));
     router.get('/trends', handle(getTrends));
     router.get('/dimensions', handle(getDimensions));
+    router.get('/dimension/:name', handle(getDimensionContent));
     // router.get('/crawl', handle(getCrawl));
     // router.get('/crawl2', handle(getCrawl2));
     router.get('/', handle(getRoot));
@@ -81,6 +82,17 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
     return {
         items: willwood.concat(gargron)
     };
+}
+
+export async function getDimensionContent(req: Request, res: Response): Promise<any> {
+    const name = req.params.name;
+    const sourceTags = DIMENSIONS.tags.filter(d => d.name === name)[0]?.source_tags;
+    const urls = await _shipTagTrends().createQueryBuilder('tag')
+        .select('url')
+        .where('LOWER(tag.name) in (:...names)', {names: sourceTags})
+        .andWhere('tag.score > :threshold', {threshold: 500})
+        .execute();
+    return urls.map((u: any) => u.url);
 }
 
 
