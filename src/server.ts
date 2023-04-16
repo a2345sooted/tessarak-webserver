@@ -16,6 +16,7 @@ import { createChatSocket } from './controllers/chat';
 import { authController } from './controllers/auth';
 import { initS3 } from './services/s3';
 import { e2eeMessageController } from './controllers/e2eeMessageController';
+import { connectToDatabase } from './db';
 
 
 
@@ -112,6 +113,7 @@ export class TessarakWebserver {
 
     async init() {
         const results = await Promise.all([
+            connectToDatabase(),
             initAuth0(),
             initOpenAI(),
             initS3(),

@@ -25,7 +25,10 @@
     "express-ws": "^5.0.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "pg": "^8.10.0",
     "pino": "^8.10.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.15",
     "uniqid": "^5.4.0",
     "uuid": "^9.0.0",
     "uuid-validate": "^0.0.3"

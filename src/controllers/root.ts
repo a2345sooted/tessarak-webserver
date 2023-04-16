@@ -10,6 +10,7 @@ export function rootController(): express.Router {
     router.get('/v1/apk', handle(getApk));
     // router.post('/message', handle(testSignal));
     router.get('/content', handle(getContent));
+    router.get('/crawl', handle(getCrawl));
     router.get('/', handle(getRoot));
 
     return router;
@@ -72,6 +73,10 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
     return {
         items: willwood.concat(gargron)
     };
+}
+
+export async function getCrawl(req: Request, res: Response): Promise<any> {
+    req.ctx.log.info('get crawl');
 }
 
 

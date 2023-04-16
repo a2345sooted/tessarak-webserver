@@ -2,6 +2,26 @@ import { getNumberOrFail, getStringOrFail } from './utils/env-helpers';
 import cors, { CorsOptions } from 'cors';
 
 
+export interface DbConfig {
+    username: string;
+    password: string;
+    host: string;
+    port: number;
+    dbName: string;
+}
+
+export function getDbConfig(): DbConfig {
+    const username = getStringOrFail('DB_USERNAME');
+    const password = getStringOrFail('DB_PASSWORD');
+    const host = getStringOrFail('DB_HOST');
+    const port = getNumberOrFail('DB_PORT');
+    const dbName = getStringOrFail('DB_NAME');
+    return {
+        username, port, password, host, dbName,
+    };
+}
+
+
 export interface Auth0Config {
     domain: string;
     clientId: string;
