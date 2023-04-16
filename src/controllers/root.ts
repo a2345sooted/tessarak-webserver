@@ -26,13 +26,22 @@ export type PostMessageBody = {
     text: string;
 }
 
-export async function getContent(req: Request, res: Response): Promise<any[]> {
-    const profileResponse = await axios.get('https://mastodon.social/users/willwood.json');
+async function getUserFeed(username: string): Promise<any[]> {
+    const profileResponse = await axios.get(`https://mastodon.social/users/${username}.json`);
     const profile = profileResponse.data;
-    const contentResponse = await axios.get('https://mastodon.social/users/willwood/outbox.json?min_id=0&page=true');
+    const contentResponse = await axios.get(`https://mastodon.social/users/${username}/outbox.json?min_id=0&page=true`);
     const content = contentResponse.data;
-    const updatedItems = content.orderedItems.map((item: any) => ({...item, name: profile.name}));
-    return updatedItems;
+    const updatedItems = content.orderedItems.map((item: any) => ({...item, name: profile.name, avatar: profile.icon.url}));
+    return [updatedItems[0],updatedItems[1],updatedItems[2]];
+}
+
+export async function getContent(req: Request, res: Response): Promise<any> {
+    req.ctx.log.info('get content');
+    const willwood = await getUserFeed('willwood');
+    const gargron = await getUserFeed('Gargron');
+    return {
+        items: willwood.concat(gargron)
+    };
 }
 
 
