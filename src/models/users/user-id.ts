@@ -6,7 +6,6 @@ export interface UserId {
 }
 
 export const makeUserId = (id: string): UserId => {
-  console.log(id.replace(/^@/, ''));
   const [username, domain] = id
     .replace(/^@/, '')
     .split('@');
