@@ -1,9 +1,10 @@
 import express, { Request, Response } from 'express';
 import { handle } from '../utils/express';
 import { getAndroidApkDownloadUrl } from '../services/s3';
-import * as libsignal from '@privacyresearch/libsignal-protocol-typescript'
 import axios from 'axios';
 import { APTag, getProfileComponents, TkContent, TkContentResponse, TkTag } from '../services/content';
+import { _ships, Ship } from '../entities/ship';
+import { ShipType } from '../entities/ship-type';
 
 export function rootController(): express.Router {
     const router = express.Router();
@@ -77,6 +78,22 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
 
 export async function getCrawl(req: Request, res: Response): Promise<any> {
     req.ctx.log.info('get crawl');
+
+    async function crawl() {
+        const response = await axios.get('https://instances.social/list.json?q%5Blanguages%5D%5B%5D=en&q%5Bmin_users%5D=&q%5Bmax_users%5D=&q%5Bsearch%5D=&strict=false');
+        const instances = response.data.instances;
+        const inserts = instances.map((instance: any, index: number) => {
+            const ship = new Ship();
+            ship.id = instance._id;
+            ship.domain = instance.name;
+            ship.type = instance.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
+            return _ships().save(ship);
+        });
+        const results = await Promise.all(inserts);
+    }
+
+    crawl();
+    return 'crawling';
 }
 
 
