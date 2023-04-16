@@ -7,7 +7,7 @@ import { ShipType } from '../entities/ship-type';
 import { getDB } from '../db';
 import { _ships, Ship } from '../entities/ship.entity';
 import { _shipTagTrends, ShipTagTrend } from '../entities/ship-tag-trend.entity';
-import { sum } from 'lodash';
+import { flatten, sum } from 'lodash';
 import { DIMENSIONS } from '../mock-data';
 
 export function rootController(): express.Router {
@@ -87,12 +87,23 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
 export async function getDimensionContent(req: Request, res: Response): Promise<any> {
     const name = req.params.name;
     const sourceTags = DIMENSIONS.tags.filter(d => d.name === name)[0]?.source_tags;
-    const urls = await _shipTagTrends().createQueryBuilder('tag')
+    const tagResults = await _shipTagTrends().createQueryBuilder('tag')
         .select('url')
         .where('LOWER(tag.name) in (:...names)', {names: sourceTags})
         .andWhere('tag.score > :threshold', {threshold: 500})
+        .orderBy('tag.score', 'DESC')
+        .limit(1)
         .execute();
-    return urls.map((u: any) => u.url);
+    const urls = tagResults.map((u: any) => u.url);
+    const requests = urls.map((url: string) => {
+        const s1 = url.split('//');
+        const s2 = s1[1].split('/');
+        const u = `https://${s2[0]}/api/v1/timelines/tag/${s2[2]}`;
+        return axios.get(u);
+    });
+    const responses = await Promise.all(requests);
+    console.log('about to response');
+    return flatten(responses.map(r => r.data)).filter(c => !c.account.bot);
 }
 
 
