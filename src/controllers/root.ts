@@ -8,6 +8,7 @@ import { getDB } from '../db';
 import { _ships, Ship } from '../entities/ship.entity';
 import { _shipTagTrends, ShipTagTrend } from '../entities/ship-tag-trend.entity';
 import { sum } from 'lodash';
+import { DIMENSIONS } from '../mock-data';
 
 export function rootController(): express.Router {
     const router = express.Router();
@@ -15,6 +16,7 @@ export function rootController(): express.Router {
     // router.post('/message', handle(testSignal));
     router.get('/content', handle(getContent));
     router.get('/trends', handle(getTrends));
+    router.get('/dimensions', handle(getDimensions));
     // router.get('/crawl', handle(getCrawl));
     // router.get('/crawl2', handle(getCrawl2));
     router.get('/', handle(getRoot));
@@ -79,6 +81,11 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
     return {
         items: willwood.concat(gargron)
     };
+}
+
+
+export async function getDimensions(req: Request, res: Response): Promise<string[]> {
+    return DIMENSIONS.tags.map(d => d.name);
 }
 
 
