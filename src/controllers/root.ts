@@ -92,7 +92,7 @@ export async function getDimensionContent(req: Request, res: Response): Promise<
         .where('LOWER(tag.name) in (:...names)', {names: sourceTags})
         .andWhere('tag.score > :threshold', {threshold: 500})
         .orderBy('tag.score', 'DESC')
-        .limit(1)
+        .limit(2)
         .execute();
     const urls = tagResults.map((u: any) => u.url);
     const requests = urls.map((url: string) => {
@@ -102,8 +102,10 @@ export async function getDimensionContent(req: Request, res: Response): Promise<
         return axios.get(u);
     });
     const responses = await Promise.all(requests);
-    console.log('about to response');
-    return flatten(responses.map(r => r.data)).filter(c => !c.account.bot);
+    return flatten(responses.map(r => r.data))
+        .filter(c => !c.account.bot)
+        .sort((a: any, b: any) => b.created_at - a.created_at)
+        .slice(0, 10);
 }
 
 
