@@ -75,6 +75,8 @@ export async function verifySMSCode(log: Logger, phoneNumber: string, code: stri
         return response.data;
 
     } catch (error: any) {
+        console.error(error);
+
         throw {
             status: error.status,
             message: error.message,
