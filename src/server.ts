@@ -113,7 +113,7 @@ export class TessarakWebserver {
 
     async init() {
         const results = await Promise.all([
-            connectToDatabase(),
+            connectToDatabase(this._log),
             initAuth0(),
             initOpenAI(),
             initS3(),
