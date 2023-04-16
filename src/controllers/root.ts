@@ -14,6 +14,7 @@ export function rootController(): express.Router {
     router.get('/v1/apk', handle(getApk));
     // router.post('/message', handle(testSignal));
     router.get('/content', handle(getContent));
+    router.get('/trends', handle(getTrends));
     // router.get('/crawl', handle(getCrawl));
     // router.get('/crawl2', handle(getCrawl2));
     router.get('/', handle(getRoot));
@@ -78,6 +79,18 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
     return {
         items: willwood.concat(gargron)
     };
+}
+
+
+export async function getTrends(req: Request, res: Response): Promise<any> {
+    req.ctx.log.info('get trends');
+    return (await _shipTagTrends().createQueryBuilder()
+        .select('LOWER(name) as name')
+        .groupBy('LOWER(name)')
+        .having('SUM(score) > 1500')
+        .orderBy('SUM(score)', 'DESC')
+        .limit(20)
+        .execute()).map((tag: any) => tag.name);
 }
 
 export async function getCrawl(req: Request, res: Response): Promise<any> {
