@@ -2,24 +2,19 @@ import "reflect-metadata";
 import { DataSource } from "typeorm";
 import { getDbConfig } from './config';
 import { Logger } from 'pino';
-import { Ship } from './entities/ship.entity';
 
-let DB_CONN: DataSource | null = null;
+let DATASOURCE: DataSource | null = null;
 
 export function getDB(): DataSource {
-    if (!DB_CONN) {
-        throw new Error('DB is null');
+    if (!DATASOURCE) {
+        throw new Error('DataSource is null');
     }
-    return DB_CONN;
+    return DATASOURCE;
 }
-
-export const DatabaseEntities = [
-    Ship,
-];
 
 export async function connectToDatabase(log: Logger): Promise<DataSource> {
     const {username, port, password, host, dbName} = getDbConfig();
-    const db = new DataSource({
+    const dataSource = new DataSource({
         type: "postgres",
         host: host,
         port: port,
@@ -29,8 +24,7 @@ export async function connectToDatabase(log: Logger): Promise<DataSource> {
         synchronize: true,
         entities: ['dist/**/**/*.entity{.ts,.js}'],
     });
-    await db.initialize();
-    log.info('database is ready...');
-    DB_CONN = db;
-    return db;
+    await dataSource.initialize();
+    DATASOURCE = dataSource;
+    return dataSource;
 }

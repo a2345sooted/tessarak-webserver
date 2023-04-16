@@ -6,6 +6,8 @@ import { APTag, getProfileComponents, TkContent, TkContentResponse, TkTag } from
 import { ShipType } from '../entities/ship-type';
 import { getDB } from '../db';
 import { _ships, Ship } from '../entities/ship.entity';
+import { _shipTagTrends, ShipTagTrend } from '../entities/ship-tag-trend.entity';
+import { sum } from 'lodash';
 
 export function rootController(): express.Router {
     const router = express.Router();
@@ -13,7 +15,7 @@ export function rootController(): express.Router {
     // router.post('/message', handle(testSignal));
     router.get('/content', handle(getContent));
     // router.get('/crawl', handle(getCrawl));
-    router.get('/crawl2', handle(getCrawl2));
+    // router.get('/crawl2', handle(getCrawl2));
     router.get('/', handle(getRoot));
 
     return router;
@@ -84,14 +86,18 @@ export async function getCrawl(req: Request, res: Response): Promise<any> {
     async function crawl() {
         const response = await axios.get('https://instances.social/list.json?q%5Blanguages%5D%5B%5D=en&q%5Bmin_users%5D=&q%5Bmax_users%5D=&q%5Bsearch%5D=&strict=false');
         const instances = response.data.instances;
-        const inserts = instances.map((instance: any, index: number) => {
-            const ship = new Ship();
-            ship.id = instance._id;
-            ship.domain = instance.name;
-            ship.type = instance.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
-            return _ships().save(ship);
-        });
-        const results = await Promise.all(inserts);
+        const inserts: any[] = [];
+        for (const instance of instances) {
+            let ship = _ships().findOne({where: {id: instance._id}});
+            if (!ship) {
+                const ship = new Ship();
+                ship.id = instance._id;
+                ship.domain = instance.name;
+                ship.type = instance.mastodon === true ? ShipType.MASTODON : ShipType.UNKNOWN;
+                inserts.push(_ships().save(ship));
+            }
+        }
+        await Promise.all(inserts);
     }
 
     crawl();
@@ -105,11 +111,34 @@ export async function getCrawl2(req: Request, res: Response): Promise<any> {
     async function crawl2() {
         const mstShips = await _ships().createQueryBuilder('ship')
             .where('ship.type = :type', {type: ShipType.MASTODON})
-            .limit(1)
+            // .limit(5)
             .getMany();
-        req.ctx.log.info(`num ships = ${mstShips.length}`);
+        // req.ctx.log.info(`num ships = ${mstShips.length}`);
+        // const stats = await _shipStats().createQueryBuilder('stats')
+        //     .where(`stats.shipId in (${mstShips.map(s => s.id).join(',')}) and `)
+        //     .getMany();
+        for (const ship of mstShips) {
+            // const index: number = mstShips.indexOf(ship);
+            try {
+                const response = await axios.get(`https://${ship.domain}/api/v1/trends/tags`);
+                const tags = response.data;
+                for (const tag of tags) {
+                    let trend = await _shipTagTrends().findOne({where: {shipId: ship.id, name: tag.name}});
+                    if (!trend) {
+                        trend = new ShipTagTrend();
+                        trend.shipId = ship.id;
+                        trend.name = tag.name;
+                        trend.url = tag.url;
+                    }
+                    const accounts = tag.history.map((h: any) => parseInt(h.accounts));
+                    trend.score = sum(accounts);
+                    await _shipTagTrends().save(trend);
+                }
+            } catch (error: any) {
+                // continue;
+            }
+        }
     }
-
     crawl2();
     return 'crawling 2';
 }
