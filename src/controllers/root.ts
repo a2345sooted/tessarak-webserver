@@ -86,11 +86,12 @@ export async function getContent(req: Request, res: Response): Promise<TkContent
 
 export async function getDimensionContent(req: Request, res: Response): Promise<any> {
     const name = req.params.name;
+    req.ctx.log.info({name}, 'get dimension content');
     const sourceTags = DIMENSIONS.tags.filter(d => d.name === name)[0]?.source_tags;
     const tagResults = await _shipTagTrends().createQueryBuilder('tag')
         .select('url')
         .where('LOWER(tag.name) in (:...names)', {names: sourceTags})
-        .andWhere('tag.score > :threshold', {threshold: 500})
+        .andWhere('tag.score > :threshold', {threshold: 0})
         .orderBy('tag.score', 'DESC')
         .limit(2)
         .execute();
@@ -103,9 +104,9 @@ export async function getDimensionContent(req: Request, res: Response): Promise<
     });
     const responses = await Promise.all(requests);
     return flatten(responses.map(r => r.data))
-        .filter(c => !c.account.bot)
+        .filter(c => !c.account.bot && c.media_attachments && c.media_attachments.length > 0 && c.media_attachments[0].type.startsWith('image'))
         .sort((a: any, b: any) => b.created_at - a.created_at)
-        .slice(0, 10);
+        .slice(0, 12);
 }
 
 
